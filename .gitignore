@@ -1,0 +1,5 @@
+# ignore test download dir 
+test/*
+CSC3100/*
+*_link.txt
+__pycache__/*
