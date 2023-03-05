@@ -1,8 +1,8 @@
-# ignore test download dir 
-test/*
-*_link*
-__pycache__/*
-# ignore course ID folder (for my download) Example MAT3007
-[A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9]/ 
-# ignore vscode config
-.vscode/
+# ignore subject folders, in windows file system a.txt is treated same as A.txt
+*[A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9]*/
+# ignore exe file, I use this to ignore my local chromedriver.exe
+*.exe
+# ignore python cache
+__pycache__
+# ignore file links generate by the sciprt
+file_links.txt
