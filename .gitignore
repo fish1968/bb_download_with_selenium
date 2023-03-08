@@ -6,3 +6,8 @@
 __pycache__
 # ignore file links generate by the sciprt
 file_links.txt
+# ignore swp file produced by running python file on linux (chrome os)
+*.swp
+
+# ignore temp runner code file by accident
+temp*
