@@ -39,12 +39,12 @@ driver = webdriver.Chrome(options=options)
 driver.get(base_url)
 # Enter student ID and password and login
 # input student id
-driver.find_element_by_xpath(input_SID_xpath).send_keys(student_info.S_ID)
+driver.find_element(By.XPATH, input_SID_xpath).send_keys(student_info.S_ID)
 # input password
-driver.find_element_by_xpath(
+driver.find_element(By.XPATH,
     input_password_xpath).send_keys(student_info.password)
 # Login
-driver.find_element_by_xpath(login_button_xpath).send_keys(Keys.ENTER)
+driver.find_element(By.XPATH, login_button_xpath).send_keys(Keys.ENTER)
 
 # cookie agreement
 WebDriverWait(driver, 10).until(
@@ -52,7 +52,7 @@ WebDriverWait(driver, 10).until(
         (By.XPATH, privacy_cookie_page_button_bb_xpath)
     )
 )
-driver.find_element_by_xpath(
+driver.find_element(By.XPATH,
     privacy_cookie_page_button_bb_xpath).send_keys(Keys.ENTER)
 
 # Go to course page
