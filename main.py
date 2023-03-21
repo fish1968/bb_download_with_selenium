@@ -11,7 +11,8 @@ import student_info
 from bb_info import *
 
 while True:
-    subject = input("PLease provide a subject name as the folder (Ex: EIE2001):")
+    subject = input(
+        "PLease provide a subject name as the folder (Ex: EIE2001):")
     try:
         folder_location = os.path.join(os.getcwd(), subject)
         if not os.path.exists(folder_location):
@@ -42,7 +43,7 @@ driver.get(base_url)
 driver.find_element(By.XPATH, input_SID_xpath).send_keys(student_info.S_ID)
 # input password
 driver.find_element(By.XPATH,
-    input_password_xpath).send_keys(student_info.password)
+                    input_password_xpath).send_keys(student_info.password)
 # Login
 driver.find_element(By.XPATH, login_button_xpath).send_keys(Keys.ENTER)
 
@@ -53,7 +54,7 @@ WebDriverWait(driver, 10).until(
     )
 )
 driver.find_element(By.XPATH,
-    privacy_cookie_page_button_bb_xpath).send_keys(Keys.ENTER)
+                    privacy_cookie_page_button_bb_xpath).send_keys(Keys.ENTER)
 
 # Go to course page
 driver.get(base_url+coures_page)
@@ -175,10 +176,10 @@ def download_files_from_this_page(total_file_links=[], pass_folder_links=[], dep
 file_links = []
 passed_folder_links = []
 depth = 0  # download collected files at depth 0
-max_depth = -1 # no maximum depth
+max_depth = -1  # no maximum depth
 download_files_from_this_page(
     total_file_links=file_links, pass_folder_links=passed_folder_links, depth=depth, max_depth=max_depth
-    )
+)
 
 # obtain plain text info from each page
 text_file = f"{subject}/{subject}_scraped_text.txt"
@@ -190,3 +191,137 @@ for link in passed_folder_links:
 
 # %%
 driver.close()  # Everything done!
+
+
+# %%
+
+
+# %%
+
+
+# %%
+
+
+# %%
+
+
+# %%
+
+
+# %%
+
+
+# %%
+
+
+# %%
+# Below are useless only for my testing
+
+
+# %%
+content_ele = driver.find_element(By.XPATH, folder_entry_xpath)
+print("--"*5 + "possible folder names " + "--"*5)
+print(content_ele.text)
+
+# Obtain each folder's reference link
+# folders = driver.find_elements(By.CLASS_NAME, "read")
+folders = content_ele.find_elements(By.CLASS_NAME, "read")
+
+folder_links = []
+ref_link = ""
+
+for element in folders:
+    try:
+        a_tag = element.find_element(By.TAG_NAME, 'a')
+    except NoSuchElementException:
+        print(f"No element found in {element.text}")
+        continue
+    ref_link = a_tag.get_attribute('href')
+    if content_url in ref_link:
+        folder_links.append(ref_link)
+    else:
+        print(f"{ref_link} is not a folder link in bb")
+print("--"*5 + "Folder links" + "--"*5)
+print(folder_links)
+
+
+# %%
+# Obtain download urls from current page
+file_links = []
+try:
+    content_list = driver.find_element(By.CLASS_NAME, "contentList")
+    page_urls = content_list.find_elements(By.TAG_NAME, 'a')
+
+    print(len(set(page_urls)) == len(page_urls))
+    with open("file_link.txt", 'w') as f:
+        with open('other_link.txt', 'w') as f2:
+            for url in page_urls:
+                page_url = url.get_attribute('href')
+                if 'bbcswebdav' in page_url and page_url not in file_links:
+                    file_links.append(page_url)
+                    f.write(page_url + '\n')
+                else:
+                    f2.write(page_url + '\n')
+except NoSuchElementException:
+    print("Content list not found in {driver.current_url}")
+
+
+# for url in page_urls:
+#     print(url.get_attribute('href'))
+
+
+# %%
+real_file_links = []
+
+with open('pdf_link.txt', 'w') as f:
+
+    for url in file_links:
+        driver.get(url)
+        real_file_links.append(driver.current_url)
+        print(driver.current_url)
+        f.write(driver.current_url + '\n')
+
+
+# %%
+# Download pdf from url to specific folders https://scripteverything.com/download-pdf-selenium-python/
+js_script = f''' 
+			body = document.querySelector('body');
+			element = document.createElement('a');
+            element.href = "{real_file_links[5]}"
+            element.download = "";
+			text = document.createTextNode('Hello WOrld YABINYABIN');
+			element.appendChild(text);
+			body.append(element);
+            //element.click()
+'''
+
+driver.execute_script(js_script)
+
+
+# %%
+options = webdriver.ChromeOptions()
+options.add_experimental_option('prefs', {
+    # Change default directory for downloads
+    "download.default_directory": "C:/Users/XXXX/Desktop",
+    "download.prompt_for_download": False,  # To auto download the file
+    "download.directory_upgrade": True,
+    # It will not show PDF directly in chrome
+    "plugins.always_open_pdf_externally": True
+})
+driver.create_options()
+
+
+# %%
+
+driver.get(
+    'https://bb.cuhk.edu.cn/bbcswebdav/pid-317351-dt-content-rid-4972414_1/xid-4972414_1')
+
+
+# %%
+for url in folder_links:
+    driver.get(url)
+    sleep(20)
+
+
+# %%
+driver.close()
